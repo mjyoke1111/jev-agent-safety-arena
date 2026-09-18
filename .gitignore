@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+harness/results/*.json
+!harness/results/.gitkeep
+playwright-report
+test-results
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts

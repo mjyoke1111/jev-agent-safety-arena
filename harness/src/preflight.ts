@@ -1,0 +1,1 @@
+import 'dotenv/config';const missing=['AI_GATEWAY_API_KEY'].filter(k=>!process.env[k]);if(missing.length){console.error(`Missing: ${missing.join(', ')}`);process.exit(1)}console.log('Credentials present. Run npm run harness.');
