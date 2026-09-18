@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@playwright/test": "^1.48.0",
+    "ai": "^7.0.106",
     "dotenv": "^18.0.0",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
