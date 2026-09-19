@@ -98,4 +98,4 @@ Set `TYPESAFE_API_KEY` from the TypeSafe console to route only Jev choice and sa
 
 ### Direct Groq planner and baseline
 
-Set `GROQ_API_KEY` to route planner and baseline calls to Groq's OpenAI-compatible `https://api.groq.com/openai/v1/chat/completions`. `GROQ_MODEL` defaults to `openai/gpt-oss-20b`. The direct route uses Groq JSON Object mode and includes the exact schema in the system prompt; Zod validates every returned object before it can enter a run artifact. If the Groq key is absent, these calls fall back to Vercel AI Gateway. The run JSON records `plannerRoute`.
+Set `GROQ_API_KEY` to route planner and baseline calls to Groq's OpenAI-compatible `https://api.groq.com/openai/v1/chat/completions`. `GROQ_MODEL` defaults to `openai/gpt-oss-20b`. The direct route uses Groq JSON Object mode, 2,048 completion tokens, low reasoning effort, and includes the exact schema in the system prompt; Zod validates every returned object before it can enter a run artifact. If the Groq key is absent, these calls fall back to Vercel AI Gateway. The run JSON records `plannerRoute`.
