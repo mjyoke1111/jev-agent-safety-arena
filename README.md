@@ -91,3 +91,7 @@ curl -fsS -X POST \
 ```
 
 The endpoint fails closed when either required secret is absent and rejects missing or incorrect run secrets. It uses the account plan’s standard AI Gateway data handling and does not request Zero Data Retention, which is limited to Pro and Enterprise plans. Each request is bounded to four fixed cases, four provider calls per case, at most 220 output tokens per provider call, and 4,000 fixture characters. It returns a generic failure response rather than provider details. Public visitors cannot trigger a run without the shared secret.
+
+### Direct Jev provider fallback
+
+Set `TYPESAFE_API_KEY` from the TypeSafe console to route only Jev choice and safety calls through `POST https://api.typesafe.ai/v1/systemone` with model `jev-latest`. Planner and baseline calls still use Vercel AI Gateway. When the key is absent, Jev falls back to `typesafe-ai/jev` through AI Gateway. The run JSON records `jevRoute`.
