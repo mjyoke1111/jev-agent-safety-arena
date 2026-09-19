@@ -1,4 +1,6 @@
 # Next iteration
 
-- When the mobile navigation is open, make the rest of the page inert and lock main/body scrolling.
-- Add screen-reader-only `passed` / `missed` text to every decision row so icon color is not the only status signal.
+- Prevent matrix headers from breaking mid-word below 520px.
+- Move focus to the error alert or Retry control when evidence loading fails.
+- Derive homepage result numbers from the published artifact so future runs cannot leave the card stale.
+- Label the homepage hero `0 / 2 INJECTIONS CAUGHT` metric explicitly as Arena-scoped.
