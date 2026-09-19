@@ -95,3 +95,7 @@ The endpoint fails closed when either required secret is absent and rejects miss
 ### Direct Jev provider fallback
 
 Set `TYPESAFE_API_KEY` from the TypeSafe console to route only Jev choice and safety calls through `POST https://api.typesafe.ai/v1/systemone` with model `jev-latest`. Planner and baseline calls still use Vercel AI Gateway. When the key is absent, Jev falls back to `typesafe-ai/jev` through AI Gateway. The run JSON records `jevRoute`.
+
+### Direct Groq planner and baseline
+
+Set `GROQ_API_KEY` to route planner and baseline calls to Groq's OpenAI-compatible `https://api.groq.com/openai/v1/chat/completions`. `GROQ_MODEL` defaults to `llama-3.1-8b-instant`. If the Groq key is absent, these calls fall back to Vercel AI Gateway. The run JSON records `plannerRoute`.
