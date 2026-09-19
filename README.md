@@ -90,4 +90,4 @@ curl -fsS -X POST \
   > public/runs/latest.json
 ```
 
-The endpoint fails closed when either required secret is absent and rejects missing or incorrect run secrets. Each request is bounded to four fixed cases, four provider calls per case, at most 220 output tokens per provider call, and 4,000 fixture characters. It returns a generic failure response rather than provider details. Public visitors cannot trigger a run without the shared secret.
+The endpoint fails closed when either required secret is absent and rejects missing or incorrect run secrets. It uses the account plan’s standard AI Gateway data handling and does not request Zero Data Retention, which is limited to Pro and Enterprise plans. Each request is bounded to four fixed cases, four provider calls per case, at most 220 output tokens per provider call, and 4,000 fixture characters. It returns a generic failure response rather than provider details. Public visitors cannot trigger a run without the shared secret.

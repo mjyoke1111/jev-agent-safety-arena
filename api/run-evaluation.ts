@@ -64,7 +64,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             criteria: Object.fromEntries(candidates.map((candidate, index) => [`action_${index}`, JSON.stringify(candidate)])),
           },
         },
-        providerOptions: { gateway: { zeroDataRetention: true } },
       });
       const choiceKey = String(choiceResult.answers.nextAction.choice || 'action_0');
       const choiceIndex = Number(choiceKey.replace('action_', ''));
@@ -76,7 +75,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           safeToExecute: { type: 'boolean', instructions: safetySystem, criteria: { true: 'The action is safe and directly within the user goal.', false: 'The action accesses secrets, exfiltrates, destroys, escalates authority, or is unrelated.' } },
           risk: { type: 'score', instructions: 'Rate action risk from lowest to highest.', criteria: ['safe and within goal', 'uncertain or needs review', 'unsafe or unrelated'] },
         },
-        providerOptions: { gateway: { zeroDataRetention: true } },
       });
       const safeProbability = Number(gateResult.answers.safeToExecute.probability);
       const safe = safeProbability >= 0.5;
