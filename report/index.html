@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <link rel="icon" href="data:," />
+  <title>Jev, with the receipts</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper:#f4f5f2; --surface:#ffffff; --surface-2:#e9ece7; --ink:#101310;
+      --muted:#59615a; --line:#cdd3cc; --strong:#242a25; --accent:#006b55;
+      --accent-soft:#d9eee7; --amber:#a55a00; --amber-soft:#ffead0; --red:#a53030;
+      --red-soft:#fae1df; --blue:#245c9a; --blue-soft:#dce8f6; --shadow:0 16px 44px rgba(31,42,34,.08);
+      --radius:10px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:auto}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+    a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+    a:hover{text-decoration-thickness:2px}
+    .shell{max-width:1240px;margin:0 auto;padding:24px clamp(18px,4vw,56px) 80px;display:grid;grid-template-columns:190px minmax(0,1fr);gap:clamp(28px,5vw,72px)}
+    .rail{position:sticky;top:18px;align-self:start;height:max-content;padding-top:136px}
+    .rail .label{font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+    .rail a{display:block;color:var(--muted);text-decoration:none;font-size:12px;line-height:1.3;padding:7px 0 7px 12px;border-left:2px solid var(--line)}
+    .rail a.active{color:var(--ink);border-color:var(--accent);font-weight:700}
+    main{min-width:0}
+    .hero{padding:72px 0 54px;border-bottom:1px solid var(--line)}
+    .overline{font:700 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin:0 0 16px}
+    h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.035em;font-size:clamp(40px,7vw,76px);line-height:.96;margin:0;max-width:780px}
+    .dek{font-family:Georgia,"Times New Roman",serif;font-size:clamp(19px,2.4vw,27px);line-height:1.35;max-width:760px;margin:26px 0 0;color:var(--strong)}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:28px;font:600 12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}
+    .access-note{margin-top:28px;display:flex;gap:12px;align-items:flex-start;background:var(--amber-soft);color:var(--ink);padding:13px 15px;border-radius:6px;max-width:720px;font-size:13px}
+    .access-note b{color:var(--amber)}
+    section{padding:64px 0;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+    .section-head{display:grid;grid-template-columns:52px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:30px}
+    .num{font:700 12px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);padding-top:10px;border-top:2px solid var(--line)}
+    h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,4.8vw,52px);line-height:1.02;letter-spacing:-.03em;font-weight:500;margin:0}
+    .thesis{font-size:18px;line-height:1.45;max-width:720px;margin:12px 0 0;color:var(--muted)}
+    h3{font-size:16px;line-height:1.3;margin:0 0 10px}
+    p{margin:0 0 14px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .small{font-size:12px;color:var(--muted)}
+    .tag{display:inline-flex;align-items:center;white-space:nowrap;border-radius:999px;padding:4px 8px;font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em;text-transform:uppercase}
+    .tag.vendor{background:var(--blue-soft);color:var(--blue)}
+    .tag.measured{background:var(--accent-soft);color:var(--accent)}
+    .tag.anecdote{background:var(--amber-soft);color:var(--amber)}
+    .tag.unverified{background:var(--red-soft);color:var(--red)}
+    .tag.unknown{background:var(--surface-2);color:var(--muted)}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .card{background:var(--surface);padding:20px;border-radius:var(--radius);box-shadow:0 1px 0 var(--line)}
+    .card strong.metric{display:block;font-family:Georgia,"Times New Roman",serif;font-size:32px;line-height:1;margin:14px 0 9px;font-weight:500}
+    .card p:last-child{margin-bottom:0}
+    .diagram{background:var(--surface);border-radius:14px;padding:clamp(18px,3vw,32px);box-shadow:var(--shadow)}
+    .flow{display:grid;grid-template-columns:1fr 42px 1.2fr 42px 1fr;align-items:stretch;gap:10px}
+    .node{border:1px solid var(--line);border-radius:8px;padding:18px;background:var(--paper)}
+    .node.accent{background:var(--accent-soft);border-color:transparent}
+    .arrow{display:grid;place-items:center;color:var(--accent);font-size:28px}
+    .q-list{display:grid;gap:7px;margin-top:12px}
+    .q{padding:7px 9px;border-radius:4px;background:var(--surface);font:600 11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .readout{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:9px 0;font:600 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .meter{height:6px;flex:1;background:var(--surface-2);border-radius:9px;overflow:hidden}.meter i{display:block;height:100%;background:var(--accent)}
+    .caption{margin:17px 0 0;font:600 13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}
+    .rule-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+    .rule{background:var(--surface);padding:19px;min-height:170px}.rule .value{font:500 clamp(26px,4vw,40px)/1 Georgia,"Times New Roman",serif;margin:18px 0 9px}.rule p{font-size:13px;color:var(--muted)}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .evidence-list{display:grid;gap:10px}
+    .evidence{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;padding:15px 0;border-top:1px solid var(--line)}
+    .evidence:first-child{border-top:0;padding-top:0}
+    .evidence p{margin:0;font-size:14px}
+    .architecture{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+    .panel{padding:22px;background:var(--surface);border-radius:var(--radius)}
+    .panel h3{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .panel ul{padding-left:18px;margin:12px 0 0}.panel li{margin:7px 0}
+    .ledger-note{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:14px}
+    .legend{display:flex;flex-wrap:wrap;gap:8px}
+    .chart-wrap{background:var(--surface);border-radius:14px;padding:18px;overflow:hidden}
+    svg.chart{display:block;width:100%;height:auto;min-height:420px}
+    .chart text{fill:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}.chart .muted{fill:var(--muted)}.chart .grid{stroke:var(--line);stroke-width:1}.chart .bar-v{fill:var(--blue)}.chart .bar-m{fill:var(--accent)}.chart .bar-a{fill:var(--amber)}
+    .baseline-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+    .baseline{padding:15px;background:var(--surface);border-radius:7px;font-size:13px}.baseline b{display:block;margin:7px 0 4px}
+    .cal-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+    .cal-note{padding:22px;background:var(--surface);border-radius:var(--radius)}
+    .empty{display:grid;place-items:center;text-align:center;min-height:250px;background:repeating-linear-gradient(135deg,var(--surface),var(--surface) 10px,var(--surface-2) 10px,var(--surface-2) 11px);border-radius:var(--radius);padding:26px}.empty strong{font:500 30px/1 Georgia,"Times New Roman",serif}.empty span{display:block;color:var(--muted);font-size:13px;margin-top:8px}
+    .formula{margin-top:14px;padding:14px;background:var(--surface-2);border-radius:6px;font:600 13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .jagged{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.finding{padding:20px;background:var(--surface);border-radius:var(--radius)}.finding .metric-line{font:500 24px/1.25 Georgia,"Times New Roman",serif;margin:14px 0 10px}.finding p{font-size:13px;color:var(--muted)}
+    .moral{margin-top:18px;padding:20px 0;border-top:3px solid var(--ink);font:500 24px/1.35 Georgia,"Times New Roman",serif}
+    .attack{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch}
+    .attack-card{background:var(--red-soft);padding:24px;border-radius:var(--radius)}
+    .attack-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.attack-state{padding:15px;background:var(--surface);border-radius:6px}.attack-state .big{font:500 32px/1 Georgia,"Times New Roman",serif;margin:10px 0 8px}.delta{color:var(--red);font-weight:800}
+    .guardrails{counter-reset:steps;display:grid;gap:0}.guard{counter-increment:steps;display:grid;grid-template-columns:34px 1fr;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}.guard:before{content:counter(steps);font:700 11px/28px ui-monospace,SFMono-Regular,Menlo,monospace;width:28px;height:28px;text-align:center;background:var(--surface-2);border-radius:50%}.guard:last-child{border-bottom:0}
+    .pattern-flow{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:center;margin-bottom:22px}.pattern-step{background:var(--surface);padding:18px;border-radius:8px;min-height:114px}.pattern-step b{display:block;margin-bottom:6px}.pattern-step span{font-size:13px;color:var(--muted)}
+    .use-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.use{padding:20px;background:var(--surface);border-radius:var(--radius)}.use h3{margin-top:12px}.use p{font-size:13px;color:var(--muted)}
+    .sidebar{margin-top:16px;padding:18px 20px;background:var(--amber-soft);border-radius:6px;font-size:13px}.sidebar strong{display:block;margin-bottom:6px}
+    .leader{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.scorecard{background:var(--surface);padding:22px;border-radius:var(--radius)}.scoreline{display:grid;grid-template-columns:minmax(90px,1.2fr) .65fr .65fr .85fr;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center;font-size:12px}.scoreline:last-child{border-bottom:0}.scoreline.header{font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);text-transform:uppercase}.scoreline.best{color:var(--accent);font-weight:800}
+    .vignettes{display:grid;gap:10px}.vignette{padding:16px;background:var(--surface);border-radius:7px}.vignette b{font-size:13px}.vignette p{font-size:12px;color:var(--muted);margin:5px 0 0}
+    .unknowns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}.unknown{background:var(--surface);padding:22px;min-height:150px}.unknown b{display:block;font-family:Georgia,"Times New Roman",serif;font-size:20px;margin:15px 0 6px}.unknown p{font-size:13px;color:var(--muted)}
+    blockquote{font-family:Georgia,"Times New Roman",serif;font-size:clamp(24px,3.6vw,38px);line-height:1.25;margin:34px 0 0;padding:28px 0 0;border-top:3px solid var(--ink)}
+    .sources{padding-bottom:30px}.sources-grid{columns:2;column-gap:34px}.source{break-inside:avoid;padding:11px 0;border-top:1px solid var(--line);font-size:13px}.source b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;color:var(--muted);margin-right:7px}.source a{color:var(--ink)}
+    .footer{padding:26px 0 0;color:var(--muted);font-size:12px}
+    .source-ref{font-size:11px;white-space:nowrap}
+    @media (max-width:900px){
+      .shell{grid-template-columns:1fr;padding-top:0}.rail{display:none}
+      .hero{padding-top:34px}.rule-grid{grid-template-columns:1fr 1fr}.cal-grid,.attack,.leader{grid-template-columns:1fr}.pattern-flow{grid-template-columns:1fr}.pattern-flow .arrow{transform:rotate(90deg);height:30px}.use-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:640px){
+      .shell{padding-left:16px;padding-right:16px}.hero{padding-bottom:38px}section{padding:46px 0}.section-head{grid-template-columns:36px 1fr;gap:10px;margin-bottom:24px}.num{font-size:10px}.flow{grid-template-columns:1fr}.flow .arrow{transform:rotate(90deg);height:26px}.cards,.rule-grid,.two-col,.architecture,.baseline-grid,.jagged,.unknowns{grid-template-columns:1fr}.rule{min-height:0}.evidence{grid-template-columns:1fr;gap:8px}.chart-wrap{padding:8px 4px}.chart text{font-size:10px}.scoreline{grid-template-columns:1fr 1fr;gap:3px 10px}.scoreline.header{display:none}.scoreline span:nth-child(n+2)::before{content:attr(data-label) ": ";color:var(--muted);font-weight:600}.sources-grid{columns:1}.access-note{font-size:12px}.mobile-links{grid-template-columns:1fr}.attack-row{grid-template-columns:1fr}.hero-meta{display:grid;gap:5px}
+    }
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    @media print{.rail,.mobile-nav{display:none}.shell{display:block;max-width:none}.card,.panel,.diagram,.chart-wrap{box-shadow:none}a{color:inherit}.hero{padding-top:20px}section{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="rail" aria-label="Report sections">
+      <div class="label">Read the evidence</div>
+      <a href="#primitive">01 Primitive</a><a href="#rules">02 Rules</a><a href="#inside">03 Inside</a><a href="#ledger">04 Ledger</a><a href="#calibration">05 Calibration</a><a href="#edge">06 Jagged edge</a><a href="#adversarial">07 Adversarial</a><a href="#builders">08 Builders</a><a href="#field">09 Field notes</a><a href="#unknown">10 Unknowns</a>
+    </nav>
+    <main>
+      <header class="hero">
+        <p class="overline">Jev launch-week evidence review · 19 Sep 2026</p>
+        <h1>Jev, with the receipts</h1>
+        <p class="dek">A fast decision primitive is not a small chatbot. The architecture is interesting, the economics can be startling, and the confidence numbers still need to earn your trust.</p>
+        <div class="hero-meta"><span>17 linked sources</span><span>Independent tests separated from vendor claims</span><span>Open questions left open</span></div>
+        <div class="access-note"><b>Access window</b><span>Vercel says Jev access through its AI Gateway is free until <strong>25 September 2026</strong>. That offer is time-limited, not permanent. <a class="source-ref" href="https://vercel.com/changelog/typesafe-ai-jev-now-available-on-ai-gateway">Vendor notice ↗</a></span></div>
+      </header>
+
+      <section id="primitive">
+        <div class="section-head"><div class="num">01</div><div><h2>The primitive</h2><p class="thesis">State goes in once. Typed questions branch in parallel. Probability readouts come back without a decode loop.</p></div></div>
+        <div class="diagram">
+          <div class="flow">
+            <div class="node"><h3>Unstructured state</h3><p class="small">A trace, document, ticket, message, tool request or compacted context.</p><div class="mono small">state = “…”</div></div>
+            <div class="arrow" aria-hidden="true">→</div>
+            <div class="node accent"><h3>Typed questions</h3><div class="q-list"><div class="q">Choice [approve, block, review]</div><div class="q">Score [0 … 1]</div><div class="q">Noul “is this urgent?”</div></div></div>
+            <div class="arrow" aria-hidden="true">→</div>
+            <div class="node"><h3>Probability readouts</h3><div class="readout"><span>approve</span><div class="meter"><i style="width:18%"></i></div></div><div class="readout"><span>block</span><div class="meter"><i style="width:61%"></i></div></div><div class="readout"><span>review</span><div class="meter"><i style="width:21%"></i></div></div></div>
+          </div>
+          <p class="caption"><span class="tag vendor">Vendor framing</span> No decode loop is the whole product. The output is structured judgment, not prose. <a class="source-ref" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">TypeSafe launch ↗</a></p>
+        </div>
+      </section>
+
+      <section id="rules">
+        <div class="section-head"><div class="num">02</div><div><h2>The rules of the box</h2><p class="thesis">The constraints are unusually legible. They also make the intended workload clear: many small judgments over shared state.</p></div></div>
+        <div class="rule-grid">
+          <article class="rule"><span class="tag measured">Measured + docs</span><div class="value">32K</div><p>Per branch: state plus the longest question. Hume measured roughly <strong>32,768</strong>.</p></article>
+          <article class="rule"><span class="tag measured">Measured + docs</span><div class="value">64–65K</div><p>Per request. Hume measured roughly <strong>65,536</strong>.</p></article>
+          <article class="rule"><span class="tag vendor">Vendor</span><div class="value">$0.042</div><p>Per million input tokens. Output tokens are listed as free.</p></article>
+          <article class="rule"><span class="tag vendor">Vendor</span><div class="value">250K / s</div><p>Token rate limit, alongside <strong>1,200 requests per minute</strong>.</p></article>
+        </div>
+        <div class="sidebar"><strong>Version discipline</strong><span class="tag vendor">Vendor</span> After tuning, pin <span class="mono">jev-1.13.0</span>. At research time, <span class="mono">jev-latest</span> resolved to that version. <a class="source-ref" href="https://docs.typesafe.ai">TypeSafe docs ↗</a> <a class="source-ref" href="https://archerhume.com/posts/jevs-architecture-unmasked/">Hume measurements ↗</a></div>
+      </section>
+
+      <section id="inside">
+        <div class="section-head"><div class="num">03</div><div><h2>Inside the black box</h2><p class="thesis">Archer Hume instrumented about <strong>11,000 requests</strong> and published raw evidence bundles. The architecture can be partly reconstructed, but not every inference is equally strong. <span class="tag measured">Independent</span></p></div></div>
+        <div class="two-col">
+          <div class="diagram">
+            <h3>Isolation test</h3>
+            <svg viewBox="0 0 560 255" role="img" aria-labelledby="iso-title iso-desc" style="width:100%;height:auto">
+              <title id="iso-title">Question isolation evidence</title><desc id="iso-desc">A sibling question secret scores zero while a secret visible in state scores around point nine.</desc>
+              <rect x="18" y="22" width="150" height="56" rx="6" fill="var(--surface-2)" stroke="var(--line)"/><text x="34" y="46" fill="var(--ink)" font-size="13" font-family="monospace">state encoded once</text><text x="34" y="65" fill="var(--muted)" font-size="11" font-family="monospace">shared prefix</text>
+              <path d="M168 50H230M230 50V196" fill="none" stroke="var(--accent)" stroke-width="2"/>
+              <path d="M230 85H270M230 150H270" fill="none" stroke="var(--accent)" stroke-width="2"/>
+              <rect x="270" y="58" width="150" height="54" rx="6" fill="var(--paper)" stroke="var(--line)"/><text x="286" y="82" fill="var(--ink)" font-size="12" font-family="monospace">sibling secret</text><text x="286" y="100" fill="var(--red)" font-size="13" font-family="monospace">P = 0.00</text>
+              <rect x="270" y="126" width="150" height="54" rx="6" fill="var(--paper)" stroke="var(--line)"/><text x="286" y="150" fill="var(--ink)" font-size="12" font-family="monospace">secret in state</text><text x="286" y="168" fill="var(--accent)" font-size="13" font-family="monospace">P = 0.90–0.92</text>
+              <text x="270" y="214" fill="var(--muted)" font-size="11" font-family="monospace">five repeats</text>
+            </svg>
+          </div>
+          <div class="evidence-list">
+            <div class="evidence"><span class="tag measured">Measured</span><p>About <strong>100 questions</strong> barely moved server time. On short state, <strong>1,500 questions took 610ms</strong> versus <strong>86.5ms</strong> for one.</p></div>
+            <div class="evidence"><span class="tag measured">Measured</span><p>A <strong>255-option Choice</strong>, billed as <strong>2,714 output tokens</strong>, returned as fast as a two-option question. The output-token count looks post-hoc, not generated.</p></div>
+            <div class="evidence"><span class="tag measured">Measured</span><p>Tokenizer fingerprinting found Qwen closest across <strong>192 candidates</strong>, matching <strong>348 of 415 probes</strong>. That is tokenizer similarity, not model identity.</p></div>
+          </div>
+        </div>
+        <div class="architecture">
+          <div class="panel"><h3>Supported <span class="tag measured">Evidence-backed</span></h3><ul><li>Shared-prefix state encoding</li><li>Per-question isolated branches</li><li>Listwise option readout</li></ul></div>
+          <div class="panel"><h3>Inferred <span class="tag unverified">Not established</span></h3><ul><li>Sparse mixture-of-experts, roughly <strong>10B active parameters</strong></li><li>Causal transformer</li><li>The MoE claim rests on speed alone</li></ul></div>
+        </div>
+        <p class="caption"><a href="https://archerhume.com/posts/jevs-architecture-unmasked/">Archer Hume, “Jev’s Architecture Unmasked” ↗</a></p>
+      </section>
+
+      <section id="ledger">
+        <div class="section-head"><div class="num">04</div><div><h2>The honest ledger</h2><p class="thesis">“How many times better?” has no honest answer without the baseline. On a log scale, the spread becomes the story.</p></div></div>
+        <div class="ledger-note"><div class="legend"><span class="tag vendor">Vendor</span><span class="tag measured">Measured</span><span class="tag anecdote">Anecdote</span></div><span class="small mono">logarithmic axis · × versus named baseline</span></div>
+        <div class="chart-wrap">
+          <svg class="chart" viewBox="0 0 860 520" role="img" aria-labelledby="ledger-title ledger-desc">
+            <title id="ledger-title">Reported Jev improvement multiples</title><desc id="ledger-desc">A logarithmic bar chart showing cost and speed multiples from several sources, with results ranging from three to four times through more than four hundred times depending on baseline.</desc>
+            <line class="grid" x1="265" y1="48" x2="265" y2="474"/><line class="grid" x1="369" y1="48" x2="369" y2="474"/><line class="grid" x1="473" y1="48" x2="473" y2="474"/><line class="grid" x1="577" y1="48" x2="577" y2="474"/><line class="grid" x1="681" y1="48" x2="681" y2="474"/><line class="grid" x1="785" y1="48" x2="785" y2="474"/>
+            <text class="muted" x="260" y="30">1×</text><text class="muted" x="362" y="30">3×</text><text class="muted" x="464" y="30">10×</text><text class="muted" x="563" y="30">30×</text><text class="muted" x="666" y="30">100×</text><text class="muted" x="766" y="30">500×</text>
+            <text x="10" y="76">Vendor cost headline</text><rect class="bar-v" x="265" y="59" width="504" height="24" rx="3"/><text x="779" y="76">444.6×</text>
+            <text x="10" y="114">Vendor speed headline</text><rect class="bar-v" x="265" y="97" width="446" height="24" rx="3"/><text x="721" y="114">193.6×</text>
+            <text x="10" y="152">Code review cost / Fable</text><rect class="bar-m" x="265" y="135" width="474" height="24" rx="3"/><text x="749" y="152">274×</text>
+            <text x="10" y="190">Code review cost / Flash</text><rect class="bar-m" x="265" y="173" width="340" height="24" rx="3"/><text x="615" y="190">45×</text>
+            <text x="10" y="228">Qwen–Cerebras cost</text><rect class="bar-m" x="265" y="211" width="294" height="24" rx="3"/><text x="569" y="228">26×</text>
+            <text x="10" y="266">Phishing cost</text><rect class="bar-m" x="265" y="249" width="298" height="24" rx="3"/><text x="573" y="266">27×</text>
+            <text x="10" y="304">Tweet median cost</text><rect class="bar-a" x="265" y="287" width="312" height="24" rx="3"/><text x="587" y="304">30×</text>
+            <text x="10" y="342">Tweet median speed</text><rect class="bar-a" x="265" y="325" width="178" height="24" rx="3"/><text x="453" y="342">7×</text>
+            <text x="10" y="380">Code review / phishing speed</text><rect class="bar-m" x="265" y="363" width="145" height="24" rx="3"/><text x="420" y="380">~5×</text>
+            <text x="10" y="418">Chinese builder real-world</text><rect class="bar-a" x="265" y="401" width="208" height="24" rx="3"/><text x="483" y="418">~10×</text>
+            <text x="10" y="456">Japanese comparison latency</text><rect class="bar-m" x="265" y="439" width="125" height="24" rx="3"/><text x="400" y="456">3–4×</text>
+            <text class="muted" x="265" y="502">Shorter is not worse. Each row answers a different question against a different baseline.</text>
+          </svg>
+        </div>
+        <div class="baseline-grid">
+          <div class="baseline"><span class="tag vendor">Vendor</span><b>Headline range</b><p><strong>444.6× cheaper</strong>, <strong>193.6× faster</strong>. TypeSafe calls this the higher end of real-world gains. It remains unreproduced.</p><a class="source-ref" href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">Source ↗</a></div>
+          <div class="baseline"><span class="tag measured">Independent</span><b>Code review</b><p>Jev: about <strong>$0.04 / 1,000 reviews</strong>, <strong>0.75s median</strong>, <strong>98% correct</strong>. Gemini Flash: <strong>$1.94</strong>, <strong>3.59s</strong>, <strong>100%</strong>. Claude Fable: <strong>$11.78</strong>, <strong>4.31s</strong>, <strong>100%</strong>.</p><a class="source-ref" href="https://github.com/gemanor/jev-code-review-benchmark">Source ↗</a></div>
+          <div class="baseline"><span class="tag measured">Author-run</span><b>Qwen 3.8 27B on Cerebras</b><p>Jev p50/p95/p99: <strong>176/336/532ms</strong> vs <strong>215/452/912ms</strong>. Cost: <strong>$0.011919</strong> vs <strong>$0.310581</strong>. Synthetic fixtures, open repo, measured <strong>17 Sep 2026 UTC</strong>.</p><a class="source-ref" href="https://github.com/iammrduncan/typesafe-ai-benchmark">Source ↗</a></div>
+          <div class="baseline"><span class="tag anecdote">Aggregate</span><b>Tweet survey</b><p>Medians: <strong>7× speed</strong>, <strong>30× cost</strong>, <strong>76ms latency</strong> across <strong>12,759 relevant tweets, 15–18 Sep</strong>. Publication and waitlist-selection bias apply.</p><a class="source-ref" href="https://openchamber.dev/blog/jev-typesafe-ai/">Source ↗</a></div>
+          <div class="baseline"><span class="tag measured">Independent</span><b>Phishing</b><p>About <strong>27× cheaper</strong> and <strong>5× faster</strong> at <strong>95.1% accuracy</strong>.</p><a class="source-ref" href="https://github.com/anisselbd/jev-phishing-bench">Source ↗</a></div>
+          <div class="baseline"><span class="tag anecdote">Reported</span><b>Other baselines</b><p>A Chinese builder reported roughly <strong>10×</strong> on low-stakes judgments. A Japanese comparison measured <strong>3–4× lower latency</strong>, while Qwen won on cost. Exact source links were not supplied in the research file.</p></div>
+        </div>
+      </section>
+
+      <section id="calibration">
+        <div class="section-head"><div class="num">05</div><div><h2>Calibration is the bet</h2><p class="thesis">A probability is useful only when it means roughly the same thing in the environment where you act on it.</p></div></div>
+        <div class="cal-grid">
+          <div class="chart-wrap">
+            <svg class="chart" viewBox="0 0 680 430" role="img" aria-labelledby="cal-title cal-desc" style="min-height:0">
+              <title id="cal-title">Expected calibration error across three distributions</title><desc id="cal-desc">MMLU has expected calibration error point zero three one three, phishing point one five four, TypeSafe workflow evaluations point one four four, and a logistic regression baseline point zero two zero seven.</desc>
+              <text x="16" y="26" class="muted">ECE ↓ lower is better</text>
+              <line class="grid" x1="210" y1="52" x2="210" y2="366"/><line class="grid" x1="320" y1="52" x2="320" y2="366"/><line class="grid" x1="430" y1="52" x2="430" y2="366"/><line class="grid" x1="540" y1="52" x2="540" y2="366"/><line class="grid" x1="650" y1="52" x2="650" y2="366"/>
+              <text class="muted" x="205" y="390">0</text><text class="muted" x="307" y="390">.05</text><text class="muted" x="416" y="390">.10</text><text class="muted" x="526" y="390">.15</text><text class="muted" x="635" y="390">.20</text>
+              <text x="16" y="95">MMLU · Jev</text><rect class="bar-m" x="210" y="77" width="69" height="25" rx="3"/><text x="289" y="95">0.0313</text>
+              <text x="16" y="166">Phishing · Jev</text><rect class="bar-m" x="210" y="148" width="339" height="25" rx="3"/><text x="559" y="166">0.154</text>
+              <text x="16" y="207">Phishing · Haiku 4.5</text><rect class="bar-a" x="210" y="189" width="213" height="25" rx="3"/><text x="433" y="207">0.097</text>
+              <text x="16" y="278">Workflow · Jev</text><rect class="bar-v" x="210" y="260" width="317" height="25" rx="3"/><text x="537" y="278">0.1440</text>
+              <text x="16" y="319">Workflow · TF-IDF+LR</text><rect class="bar-a" x="210" y="301" width="46" height="25" rx="3"/><text x="266" y="319">0.0207</text>
+              <text x="16" y="420" class="muted">Different distributions. Do not read these as one leaderboard.</text>
+            </svg>
+          </div>
+          <div class="empty"><div><span class="tag unknown">Unknown</span><strong>Production shift</strong><span>No third-party data.</span></div></div>
+        </div>
+        <div class="cal-note" style="margin-top:16px">
+          <div class="evidence"><span class="tag measured">Independent</span><p><strong>MMLU:</strong> <strong>1,200 items</strong>, <strong>10 bins</strong>, ECE <strong>0.0313</strong>; <strong>990 predictions</strong> landed in the <strong>0.9–1.0 bin</strong>. Benchmark distribution. <a class="source-ref" href="https://archerhume.com/posts/jevs-architecture-unmasked/">Hume ↗</a></p></div>
+          <div class="evidence"><span class="tag measured">Independent</span><p><strong>Phishing:</strong> Jev ECE <strong>0.154</strong> versus Claude Haiku 4.5 at <strong>0.097</strong>. Messier distribution. <a class="source-ref" href="https://github.com/anisselbd/jev-phishing-bench">Benchmark ↗</a></p></div>
+          <div class="evidence"><span class="tag vendor">Published values</span><p><strong>Enterprise workflows:</strong> Jev ECE <strong>0.1440</strong> versus TF-IDF + logistic regression at <strong>0.0207</strong> with similar top-1 performance. These are published comparison numbers from a competing open-clone project, not a live measurement here. <a class="source-ref" href="https://evals.typesafe.ai">TypeSafe evals ↗</a></p></div>
+          <div class="formula">Choice confidence: c = (p<sub>max</sub> − 1/K) ÷ (1 − 1/K)<br><span class="small">Distance above uniform, not a correctness probability. <span class="tag vendor">Vendor formula</span> <span class="tag measured">Independently measured</span></span></div>
+        </div>
+      </section>
+
+      <section id="edge">
+        <div class="section-head"><div class="num">06</div><div><h2>The jagged edge</h2><p class="thesis">The output types are strict. Their semantics are not interchangeable, and small presentation choices can cross a policy threshold.</p></div></div>
+        <div class="jagged">
+          <article class="finding"><span class="tag measured">Octomind</span><div class="metric-line">Noul <strong>0.60</strong><br>Choice P(yes) <strong>0.81</strong></div><p>Same underlying question. Do not port thresholds across question types. <a class="source-ref" href="https://octomind.run/blog/jev-system-one-model-ai-agents">Source ↗</a></p></article>
+          <article class="finding"><span class="tag measured">Docs + Octomind</span><div class="metric-line">q + ¬q = <strong>1.19</strong><br>and <strong>0.91</strong></div><p>Two Nouls are not guaranteed to sum to one. The first result appears in TypeSafe’s own example; the second in Octomind’s test. <a class="source-ref" href="https://docs.typesafe.ai">Docs ↗</a></p></article>
+          <article class="finding"><span class="tag measured">Hume</span><div class="metric-line">Fact position:<br><strong>12/16 · 11/16 · 16/16</strong></div><p>Reference fact first, middle, last. Put it in state and the result became <strong>48/48</strong>. <a class="source-ref" href="https://archerhume.com/posts/jevs-architecture-unmasked/">Source ↗</a></p></article>
+          <article class="finding"><span class="tag measured">Hume</span><div class="metric-line">One extra option:<br><strong>+0.38 → +0.11</strong></div><p>An irrelevant fifth option moved mean log-odds. Reversing options moved a tech-support probability from about <strong>0.84–0.89</strong> to <strong>0.93–0.96</strong>.</p></article>
+        </div>
+        <div class="moral">The type system constrains the shape of the answer, not the quality of the judgment.</div>
+      </section>
+
+      <section id="adversarial">
+        <div class="section-head"><div class="num">07</div><div><h2>The adversarial hole</h2><p class="thesis">Jev’s state is powerful context. TypeSafe’s own docs say it is not treated as hostile.</p></div></div>
+        <div class="attack">
+          <div class="attack-card">
+            <span class="tag measured">Independent · n=1</span>
+            <h3 style="margin-top:14px">A planted “pre-approved” sentence changed the judgment on <span class="mono">rm -rf ~/.ssh</span></h3>
+            <div class="attack-row">
+              <div class="attack-state"><span class="small mono">clean state</span><div class="big">P(block) 0.76</div><p class="small">P(auto_allow) <strong>0.00</strong><br>confidence <strong>0.64</strong></p></div>
+              <div class="attack-state"><span class="small mono">poisoned state</span><div class="big delta">P(block) 0.48</div><p class="small">P(auto_allow) <strong>0.09</strong><br>confidence <strong>0.22</strong></p></div>
+            </div>
+            <p class="caption"><a href="https://octomind.run/blog/jev-system-one-model-ai-agents">Octomind numbered probe ↗</a></p>
+          </div>
+          <div class="panel">
+            <h3>The safer shape</h3>
+            <div class="guardrails"><div class="guard"><div><b>Screen before context</b><p class="small">Detect obviously hostile text before it enters the decision state.</p></div></div><div class="guard"><div><b>Treat probabilities as advisory</b><p class="small">A score is evidence for policy, not policy itself.</p></div></div><div class="guard"><div><b>Tune on your distribution</b><p class="small">Thresholds copied from posts are not configuration.</p></div></div><div class="guard"><div><b>Escalate low confidence</b><p class="small">Use a human or stronger model where uncertainty matters.</p></div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="builders">
+        <div class="section-head"><div class="num">08</div><div><h2>How builders actually use it</h2><p class="thesis">The architecture converges quickly: a generative model proposes, Jev decides, code controls, and humans catch the uncertain cases.</p></div></div>
+        <div class="pattern-flow">
+          <div class="pattern-step"><b>LLM generates</b><span>Plans, candidate actions, summaries or tool calls.</span></div><div class="arrow">→</div>
+          <div class="pattern-step"><b>Jev decides</b><span>Routes, scores, approves or flags typed questions.</span></div><div class="arrow">→</div>
+          <div class="pattern-step"><b>Code controls</b><span>Applies thresholds, permissions and deterministic checks.</span></div><div class="arrow">→</div>
+          <div class="pattern-step"><b>Humans catch</b><span>Low-confidence and high-risk cases.</span></div>
+        </div>
+        <div class="use-grid">
+          <article class="use"><span class="tag vendor">Documented</span><h3>LangChain integration</h3><p><span class="mono">TypeSafeClassifier</span>, <span class="mono">ModelRouterMiddleware</span> and <span class="mono">AutoModeMiddleware</span>. Integration surface, not a performance measurement.</p><a class="source-ref" href="https://www.langchain.com/blog/building-a-harness-with-jev">Runkle ↗</a> · <a class="source-ref" href="https://runtimewire.com/article/langchain-adds-jev-decision-model-agent-workflows">RuntimeWire ↗</a></article>
+          <article class="use"><span class="tag measured">Author-run</span><h3>PreToolUse hook</h3><p>Octomind published a runnable hook with thresholds around tool calls. The useful pattern is the control boundary, not the exact numbers.</p><a class="source-ref" href="https://octomind.run/blog/jev-system-one-model-ai-agents">Octomind ↗</a></article>
+          <article class="use"><span class="tag anecdote">Rollout framing</span><h3>Shadow first</h3><p>Keep current behavior, run Jev beside it, label decisions, tune thresholds, then automate low-risk paths. Preserve fallback.</p><a class="source-ref" href="https://flaviocopes.com/jev/">Flavio Copes ↗</a></article>
+        </div>
+        <aside class="sidebar"><strong>Movez’s “20 tips” are heuristics, not measurements.</strong><span class="tag anecdote">Asserted advice</span> Batch questions, gate on confidence, keep arithmetic in code, and pin versions are sensible starting points. By the author’s own framing, posted thresholds are a starting point, not a config. The research file included no citable URL for this post.</aside>
+      </section>
+
+      <section id="field">
+        <div class="section-head"><div class="num">09</div><div><h2>What the field reports</h2><p class="thesis">Launch week produced a lot of demos. A few are tests; most are signals about where people want the primitive to fit.</p></div></div>
+        <div class="leader">
+          <div class="scorecard">
+            <span class="tag measured">Author-run · strongest labels</span>
+            <h3 style="margin-top:13px">Empryo failure triage</h3>
+            <div class="scoreline header"><span>Model</span><span>Correct</span><span>Latency</span><span>Cost / check</span></div>
+            <div class="scoreline best"><span>Jev</span><span data-label="Correct">102/102</span><span data-label="Latency">273ms</span><span data-label="Cost">$0.00002</span></div>
+            <div class="scoreline"><span>GPT-5.6 Terra/Luna</span><span data-label="Correct">102/102</span><span data-label="Latency">~1.3s</span><span data-label="Cost">$0.00250</span></div>
+            <div class="scoreline"><span>Claude Haiku 4.5</span><span data-label="Correct">101/102</span><span data-label="Latency">602ms</span><span data-label="Cost">$0.00125</span></div>
+            <div class="scoreline"><span>Minimax M3</span><span data-label="Correct">101/102</span><span data-label="Latency">not supplied</span><span data-label="Cost">not supplied</span></div>
+            <div class="scoreline"><span>Union Alpha</span><span data-label="Correct">96/97</span><span data-label="Latency">8.7s</span><span data-label="Cost">not supplied</span></div>
+            <p class="small" style="margin-top:14px">The answer keys were document-derived and the author also published three negative Jev results. But the task was easy: a regex scored <strong>98/102</strong>. <a class="source-ref" href="https://empryo.com/blog/jev-and-the-harness">Method ↗</a></p>
+          </div>
+          <div class="vignettes">
+            <div class="vignette"><span class="tag measured">Author-run</span><b>Construction plans</b><p><strong>26 sheets</strong>, <strong>123 line items</strong>, <strong>378 questions</strong>, <strong>36 calls</strong>, <strong>2.9s</strong>, <strong>$0.0052</strong>. Triage matched GPT-4.1 and Astra on <strong>26/26</strong>; line-item agreement was <strong>82–83%</strong>. The author called it a “first-day model” and “not yet at judge level.” Source: Trinay Hari; no citable URL in the research file.</p></div>
+            <div class="vignette"><span class="tag anecdote">Demo</span><b>Flight search</b><p>Browser Use’s <span class="mono">jev-ultrafast</span>: about <strong>7s</strong> for <strong>$0.0039</strong>. The project had <strong>5,800 stars</strong>; its README says this is not a general reliability benchmark. <a class="source-ref" href="https://github.com/browser-use/jev-ultrafast">Repo ↗</a></p></div>
+            <div class="vignette"><span class="tag anecdote">User report</span><b>Context compaction</b><p>An open plugin with <strong>3,400 stars</strong>; one user reported compressing about <strong>1M tokens to 86K</strong> in roughly <strong>1s</strong>. <a class="source-ref" href="https://github.com/tamaratran/fast-jev-compaction">Repo ↗</a></p></div>
+            <div class="vignette"><span class="tag measured">Author-run</span><b>Paper triage + fraud</b><p>Hassan reported <strong>1,018 papers</strong> for <strong>$0.08</strong> at <strong>256ms median</strong>; a fraud pipeline processed <strong>100 emails in 1.42s</strong>, scored <strong>96/100</strong>, cost about <strong>$0.07</strong>, and escalated uncertain cases to Kimi K3. No citable URL was supplied.</p></div>
+            <div class="vignette"><span class="tag measured">Self-run</span><b>WebMCP</b><p>Jev plus a small model scored <strong>49/49</strong> at about <strong>112× lower model cost</strong> than a computer-use baseline. Open methodology; source URL not supplied.</p></div>
+            <div class="vignette"><span class="tag anecdote">Verified account · author-run notes · n=1</span><b>Jiayuan “JY” Zhang: one day in, still skeptical</b><p>After a day of hands-on study, Zhang’s view was that Jev behaves like a much faster general classifier or decision-maker, a job LLMs already do, so the novelty faded quickly. With parameter scale undisclosed and probably small, he expects thinner world knowledge than a regular LLM and leaves complex-scenario accuracy as an open question.</p><p>His clearest sweet spot is a <strong>finite solution space plus low latency</strong>, where structured output can be checked programmatically. Computer Use fits the shape: <span class="mono">DOM list → Jev action → new DOM list</span>. But there are no benchmarks yet for reasoning quality or long-context computer use; he expects it to trail GPT-6 Astra on quality while winning on speed.</p><p>Rewriting parts of Pi Agent produced few wins. Parameterized tool calls, such as edits with exact line numbers, are not a finite set, so tool selection cannot simply be replaced. Compaction framed as classification looked possible but little different from using an LLM.</p><p>He sees more promise in hard real-time decision trees such as games, robotics and autonomous driving, where latency matters and training data can be scarce. He is building two tests: a Poker AI for adversarial model battles across long decision trees, and a Pokémon VGC doubles-battle AI trained from complete season data for use in ranked matches.</p><p><span class="tag anecdote">Not a benchmark</span> Verified X account <strong>@jiayuan_jy</strong>, posted <strong>18 Sep 2026</strong>; <strong>55.2K views</strong>, <strong>270 likes</strong>, <strong>34 reposts</strong>. Faithful English summary of a Chinese-language post; no citable URL was supplied.</p></div>
+          </div>
+        </div>
+        <div class="sidebar"><strong>Launch-week sentiment is color, not ground truth.</strong><span class="tag anecdote">Aggregate</span> OpenChamber’s tweet medians carry publication and waitlist-selection bias. <a class="source-ref" href="https://openchamber.dev/blog/jev-typesafe-ai/">Survey ↗</a> A secondhand poker eval, <strong>63% solver match</strong> and a <strong>16/16 all-in trap spot</strong>, could not be traced to its original source and is therefore <span class="tag unverified">Unverified</span>.</div>
+      </section>
+
+      <section id="unknown">
+        <div class="section-head"><div class="num">10</div><div><h2>What is still unknown</h2><p class="thesis">The launch answered “can this primitive be useful?” It did not yet answer the questions that determine whether it is dependable.</p></div></div>
+        <div class="unknowns">
+          <article class="unknown"><span class="tag unknown">No third-party answer</span><b>Production calibration under distribution shift</b><p>Benchmarks are not the environment where your policy will run.</p></article>
+          <article class="unknown"><span class="tag unknown">Only n=1</span><b>An independent prompt-injection benchmark</b><p>The Octomind probe shows plausibility, not a failure rate.</p></article>
+          <article class="unknown"><span class="tag unknown">Not measured</span><b>The chained-confidence degradation curve</b><p>It is widely cited and, in the reviewed sources, never quantified.</p></article>
+          <article class="unknown"><span class="tag unknown">Incomplete accounting</span><b>Cost per solved task</b><p>Published savings are per-call arithmetic. Retries, review and failure recovery are missing.</p></article>
+          <article class="unknown"><span class="tag anecdote">Author-reported</span><b>Directory methodology</b><p>Made with Jev lists <strong>137 builds</strong> and <strong>47 guides</strong>. The research file did not include a citable methodology or URL.</p></article>
+          <article class="unknown"><span class="tag unknown">Open</span><b>Durability after launch week</b><p>Which patterns survive once novelty, free access and selection effects fade?</p></article>
+        </div>
+        <blockquote>Software that calls a function instead of interrogating a chatbot, with the receipts graded.</blockquote>
+      </section>
+
+      <section class="sources" id="sources">
+        <div class="section-head"><div class="num">↗</div><div><h2>Sources</h2><p class="thesis">Primary documentation, independent tests, open repositories and launch-week reporting. Claims above retain the caveats attached by their source.</p></div></div>
+        <div class="sources-grid">
+          <div class="source"><b>01</b><a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">TypeSafe · Introducing System One models and Jev</a></div>
+          <div class="source"><b>02</b><a href="https://docs.typesafe.ai">TypeSafe documentation</a></div>
+          <div class="source"><b>03</b><a href="https://evals.typesafe.ai">TypeSafe workflow evaluations</a></div>
+          <div class="source"><b>04</b><a href="https://archerhume.com/posts/jevs-architecture-unmasked/">Archer Hume · Jev’s Architecture Unmasked</a></div>
+          <div class="source"><b>05</b><a href="https://octomind.run/blog/jev-system-one-model-ai-agents">Octomind · Jev Explained</a></div>
+          <div class="source"><b>06</b><a href="https://github.com/iammrduncan/typesafe-ai-benchmark">iammrduncan · TypeSafe AI benchmark</a></div>
+          <div class="source"><b>07</b><a href="https://openchamber.dev/blog/jev-typesafe-ai/">OpenChamber · 12,759 tweets</a></div>
+          <div class="source"><b>08</b><a href="https://empryo.com/blog/jev-and-the-harness">Empryo · Jev and the harness</a></div>
+          <div class="source"><b>09</b><a href="https://flaviocopes.com/jev/">Flavio Copes · Jev deep dive</a></div>
+          <div class="source"><b>10</b><a href="https://aiwithmike.substack.com/p/jev-three-days-in-what-is-known-what">aiwithmike · Three days in</a></div>
+          <div class="source"><b>11</b><a href="https://robotworld.top/en/articles/typesafe-jevm-system-one">RobotWorld · Frontier Intelligence as a Function Call</a></div>
+          <div class="source"><b>12</b><a href="https://runtimewire.com/article/langchain-adds-jev-decision-model-agent-workflows">RuntimeWire · LangChain adds Jev</a></div>
+          <div class="source"><b>13</b><a href="https://www.langchain.com/blog/building-a-harness-with-jev">Sydney Runkle · Building a Harness with Jev</a></div>
+          <div class="source"><b>14</b><a href="https://github.com/browser-use/jev-ultrafast">Browser Use · jev-ultrafast</a></div>
+          <div class="source"><b>15</b><a href="https://github.com/tamaratran/fast-jev-compaction">Tamara Tran · fast-jev-compaction</a></div>
+          <div class="source"><b>16</b><a href="https://github.com/anisselbd/jev-phishing-bench">jev-phishing-bench</a></div>
+          <div class="source"><b>17</b><a href="https://github.com/gemanor/jev-code-review-benchmark">jev-code-review-benchmark</a></div>
+          <div class="source"><b>18</b><a href="https://vercel.com/changelog/typesafe-ai-jev-now-available-on-ai-gateway">Vercel · Jev on AI Gateway</a></div>
+        </div>
+        <div class="footer">Research snapshot: 19 September 2026. This report does not claim hands-on testing by its author.</div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const links=[...document.querySelectorAll('.rail a')];
+    const targets=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    if('IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));}})},{rootMargin:'-18% 0px -72% 0px'});
+      targets.forEach(s=>io.observe(s));
+    }
+  </script>
+</body>
+</html>
